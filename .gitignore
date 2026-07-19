@@ -1,1 +1,5 @@
 main
+mycat
+*.o
+*.exe
+.DS_Store
