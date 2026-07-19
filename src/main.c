@@ -4,6 +4,8 @@
 
 #define MAX_LEN 128
 
+
+
 typedef struct arguments{
 
 unsigned int files_count;
@@ -45,6 +47,7 @@ int read_file(char *path, char **buffer){
 
     FILE *f = fopen(path, "r");
     if (f == NULL){
+
         perror("fopen failed");
         exit(1);
     }
@@ -52,7 +55,7 @@ int read_file(char *path, char **buffer){
 
     int size = 0;
     do{
-        if(tmp_size + MAX_LEN >= tmp_capacity){
+        if(tmp_size + MAX_LEN + 1 >= tmp_capacity){
             tmp_capacity *=2;
             tmp = realloc(tmp, tmp_capacity * sizeof(char));
             if(tmp == NULL){
@@ -81,10 +84,18 @@ int main(int argc, char **argv){
     parse_arguments(argc, argv, &args);
 
 
-    char *buffer = NULL;
+    for (int i = 0; i < args.files_count; i++){
 
-    size_of_file = read_file("main.c", &buffer);
-    printf("%s\n", buffer);
-    printf("Size of file: %d\n", size_of_file);
+        char *buffer = NULL;
+        size_of_file = read_file(args.files[i], &buffer);
+
+        printf("%s\n", buffer);
+        printf("file size: %d\n", size_of_file);
+
+        free(buffer);
+
+    }
+    free(args.files);
+
     return 0;
 }
